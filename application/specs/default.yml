@@ -1,0 +1,20 @@
+swagger: '2.0'
+info:
+  version: '1.0'
+  title: Falcon API
+  description: Falcon sample API
+host: falcon-api.org
+basePath: "/"
+schemes:
+- http
+- https
+paths:
+  {% include "status.yml" %}
+definitions:
+  Status:
+    type: object
+    properties:
+      code:
+        type: integer
+      message:
+        type: string

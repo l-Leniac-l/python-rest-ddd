@@ -1,0 +1,17 @@
+"/":
+    get:
+      description: Get application status
+      tags:
+        - status
+      produces:
+        - application/json
+      security: []
+      deprecated: false
+      responses:
+        200:
+          description: Application status for healthchecking
+          schema:
+            $ref: '#/definitions/Status'
+          examples:
+            code: 200
+            message: running

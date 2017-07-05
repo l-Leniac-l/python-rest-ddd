@@ -1,0 +1,4 @@
+{
+  "code": {{code | tojson}},
+  "message": {{message | tojson}}
+}

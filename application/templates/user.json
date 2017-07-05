@@ -1,0 +1,10 @@
+{
+  "data": {
+    "id": {{user.user_id | tojson}},
+    "type": "user",
+    "attributes": {
+      "name": {{user.user_name | tojson}},
+      "cpf": {{user.user_cpf | tojson}}
+    }
+  }
+}

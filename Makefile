@@ -1,4 +1,6 @@
-server: export APP_DB_HOST=127.0.0.1
+server: export APP_ENVIRONMENT=development
+	export APP_JWT_SECRET=qwertyuiopasdfghjklzxcvbnm123456
+	export APP_DB_HOST=127.0.0.1
 	export APP_DB_PORT=3306
 	export APP_DB_USER=root
 	export APP_DB_PASSWORD=123456

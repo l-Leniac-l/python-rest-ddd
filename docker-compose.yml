@@ -1,0 +1,53 @@
+version: '2'
+services:
+  mysql:
+    image: mysql:5.7
+    container_name: falcon_mysql
+    volumes:
+      - db_data:/var/lib/mysql
+    ports:
+      - "3307:3306"
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ckBuZG9tcDRzc3dvcmQK
+      MYSQL_DATABASE: falcon
+      MYSQL_USER: falcon
+      MYSQL_PASSWORD: falcon
+
+  dump:
+    image: thomass/mysqldump
+    container_name: falcon_dump
+    volumes_from:
+      - "mysql"
+    volumes:
+      - ./mysql:/backup
+    command: restore
+    environment:
+      DATABASES: "falcon"
+      DBPASS: ckBuZG9tcDRzc3dvcmQK
+      BACKUP_NAME: db_backup
+
+  api:
+    build: .
+    container_name: falcon_api
+    ports:
+      - "5000:5000"
+    volumes:
+      - .:/app
+    links:
+      - "mysql"
+    depends_on:
+      - "dump"
+    restart: on-failure
+    environment:
+      APP_ENVIRONMENT: development
+      APP_JWT_SECRET: qwertyuiopasdfghjklzxcvbnm123456
+      APP_DB_HOST: mysql
+      APP_DB_PORT: 3306
+      APP_DB_USER: falcon
+      APP_DB_PASSWORD: falcon
+      APP_DB_DATABASE: falcon
+
+
+volumes:
+  db_data:

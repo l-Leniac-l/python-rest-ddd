@@ -1,9 +1,15 @@
-server: export APP_ENVIRONMENT=development
-	export APP_JWT_SECRET=qwertyuiopasdfghjklzxcvbnm123456
-	export APP_DB_HOST=127.0.0.1
-	export APP_DB_PORT=3306
-	export APP_DB_USER=root
-	export APP_DB_PASSWORD=123456
-	export APP_DB_DATABASE=falcon
 server:
-	gunicorn -b localhost:5000 --reload application:app.app
+	docker-compose up -d
+
+stop:
+	docker-compose down
+
+backup:
+	docker run --rm \
+		--volumes-from falcon_mysql \
+		-v $(shell pwd)/mysql:/backup \
+		-e DBUSER=root \
+		-e DATABASES="falcon" \
+		-e DBPASS=ckBuZG9tcDRzc3dvcmQK \
+		-e BACKUP_NAME=db_backup \
+		thomass/mysqldump backup

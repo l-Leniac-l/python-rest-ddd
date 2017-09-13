@@ -1,35 +1,49 @@
-version: '2'
+version: '3'
 services:
   mysql:
-    image: mysql:5.7
+    build:
+      context: .
+      dockerfile: ./application/environments/local/mysql/Dockerfile
     container_name: falcon_mysql
+    ports:
+      - "3307:3306"
     volumes:
       - db_data:/var/lib/mysql
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: ckBuZG9tcDRzc3dvcmQK
-      MYSQL_DATABASE: falcon
       MYSQL_USER: falcon
       MYSQL_PASSWORD: falcon
+      MYSQL_DATABASE: falcon
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
 
-  dump:
-    image: thomass/mysqldump
-    container_name: falcon_dump
+  mysql_backup:
+    build:
+      context: .
+      dockerfile: ./application/environments/local/mysql/backup/Dockerfile
+    container_name: falcon_mysql_backup
+    command: sh -c '/wait-for mysql:3306 -t 100 -- /scripts/startup.sh restore'
+    volumes:
+      - ./application/environments/local/mysql/backup:/backup
+    links:
+      - "mysql"
     depends_on:
       - "mysql"
-    volumes_from:
-      - "mysql"
-    volumes:
-      - ./mysql:/backup
-    command: restore
+    restart: on-failure
     environment:
-      DATABASES: "falcon"
-      DBPASS: ckBuZG9tcDRzc3dvcmQK
-      BACKUP_NAME: db_backup
+      MYSQL_DATABASE: falcon
+      MYSQL_ROOT_PASSWORD: ckBuZG9tcDRzc3dvcmQK
 
   api:
-    build: .
+    build:
+      context: .
+      dockerfile: ./application/environments/local/app/Dockerfile
     container_name: falcon_api
+    command: sh -c '/wait-for mysql:3306 -t 100 -- /scripts/startup.sh'
     ports:
       - "5000:5000"
     volumes:
@@ -37,7 +51,7 @@ services:
     links:
       - "mysql"
     depends_on:
-      - "dump"
+      - "mysql_backup"
     restart: on-failure
     environment:
       APP_ENVIRONMENT: development

@@ -1,0 +1,13 @@
+{
+    "id": "{{address._id}}",
+    "type": "address",
+    "attributes": {
+      "user": {{address.user | tojson}},
+      "street": {{address.address.street | tojson}},
+      "number": {{address.address.number | tojson}},
+      "city": {{address.address.city | tojson}},
+      "province": {{address.address.province | tojson}},
+      "country": {{address.address.country | tojson}},
+      "zip": {{address.address.zip | tojson}}
+    }
+}

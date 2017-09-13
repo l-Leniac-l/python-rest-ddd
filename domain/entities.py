@@ -1,11 +1,12 @@
 """Entities module"""
 from pony import orm
-from infrastructure.database import database
+from infrastructure.mysql import relational_database
 
-class User(database.db.Entity):
+
+class User(relational_database.db.Entity):
     _table_ = 'users'
     user_id = orm.PrimaryKey(int, auto=True, column='id_usuario')
     user_name = orm.Required(str, column='nr_nome')
     user_cpf = orm.Optional(str, column='nr_cpf')
 
-database.db.generate_mapping(create_tables=False)
+relational_database.db.generate_mapping(create_tables=False)

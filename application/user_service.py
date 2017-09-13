@@ -6,7 +6,6 @@ from domain.domain_service import DomainService
 class UserService(BaseService):
 
     def on_get(self, req, resp, user_name):
-        print(req.context['user'])
         user = DomainService.search_user_data(user_name=user_name)
         if user:
             resp.status = falcon.HTTP_200

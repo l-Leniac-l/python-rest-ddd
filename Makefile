@@ -4,7 +4,7 @@ build:
 server:
 	docker-compose up
 
-stop:
+stop: mongo_backup
 	docker-compose down
 
 mysql_backup:
@@ -12,7 +12,7 @@ mysql_backup:
 		mysql_backup \
 		/scripts/startup.sh backup
 
-mongo_backup:
+mongo_backup: mysql_backup
 	docker-compose run --rm \
 		mongo_backup \
 		/scripts/startup.sh backup
